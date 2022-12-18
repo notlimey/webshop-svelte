@@ -11,6 +11,8 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			$components: './src/components',
+			$stores: './src/stores',
+			$myTypes: './src/types',
 		}
 	}
 };
