@@ -6,3 +6,8 @@ export type ShopItemType = {
     image: string;
     description: string;
 }
+
+export type CartItemType = {
+    id: number;
+    amount: number;
+}
