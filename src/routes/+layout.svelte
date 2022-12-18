@@ -5,4 +5,6 @@
 </script>
 
 <Header />
-<Container><slot /></Container>
+<Container>
+    <slot />
+</Container>
