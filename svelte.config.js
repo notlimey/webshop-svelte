@@ -13,6 +13,7 @@ const config = {
 			$components: './src/components',
 			$stores: './src/stores',
 			$myTypes: './src/types',
+			$lib: './src/lib',
 		}
 	}
 };
