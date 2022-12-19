@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { addToCart } from "$stores/cart";
 	import type { ShopItemType } from "src/types";
+    import { fade, fly } from 'svelte/transition';
 
     export let item: ShopItemType;
+    export let index: number;
 
     const handleAddToCart = (e: MouseEvent) => {
         addToCart(item);
@@ -50,7 +52,7 @@
     }
 </script>
 
-<div id={"shopitem-" + item.id} class="w-full flex flex-col border border-transparent hover:bg-gray-50 transition-colors">
+<div id={"shopitem-" + item.id} class="w-full flex flex-col border border-transparent hover:bg-gray-50 transition-colors"  in:fly="{{ y: 200, duration: 400 + (index * 50) }}" out:fade="{{duration: 200}}">
     <img src={item.image} alt="item" class="w-full h-48 object-contain">
     <div class="p-2">
         <p class="text-lg font-medium mb-1">{item.name}</p>
