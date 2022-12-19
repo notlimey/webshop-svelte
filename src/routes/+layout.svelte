@@ -16,6 +16,6 @@
 </script>
 
 <Header />
-<Container>
+<Container classes="mt-24">
     <slot />
 </Container>

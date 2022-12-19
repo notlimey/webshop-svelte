@@ -8,6 +8,7 @@ export type ShopItemType = {
 }
 
 export type CartItemType = {
+    item: ShopItemType;
     id: number;
     amount: number;
 }

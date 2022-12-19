@@ -1,16 +1,16 @@
-import type { CartItemType } from "$myTypes";
+import type { CartItemType, ShopItemType } from "$myTypes";
 import { writable } from "svelte/store";
 
 const cart = writable<CartItemType[]>([]);
 
-const addToCart = (id: number) => {
+const addToCart = (item: ShopItemType) => {
     cart.update((items) => {
-        const item = items.find((item) => item.id === id);
+        const existing = items.find((x) => x.id === item.id);
 
-        if (item) {
-            item.amount += 1;
+        if (existing) {
+            existing.amount += 1;
         } else {
-            items.push({ id, amount: 1 });
+            items.push({ id: item.id, amount: 1, item });
         }
 
         return items;

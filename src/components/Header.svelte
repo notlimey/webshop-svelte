@@ -14,7 +14,7 @@
         <h1 class="text-2xl">Webshop in svelte</h1>
         <div>
             <a href="/cart" class="mr-10 relative">Cart {#if len > 0}
-                <span class="absolute -top-3">
+                <span class="absolute -top-3" id="cart-count">
                     {#if len > 9}
                         <p>+9</p>
                     {:else}
@@ -26,4 +26,3 @@
         </div>
     </Container>
 </header>
-<div class="w-full mb-20" />
