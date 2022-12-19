@@ -1,5 +1,18 @@
+import { auth, db } from "$lib/firebase";
 import type { CartItemType, ShopItemType } from "$myTypes";
+import type { User } from "firebase/auth";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { writable } from "svelte/store";
+import { user as writableUser, loading } from "./authStore";
+import { products } from "./store";
+
+let user: null | User = null;
+let userLoading = true;
+let prods = [] as ShopItemType[];
+
+loading.subscribe(l => userLoading = l)
+writableUser.subscribe(u => user = u);
+products.subscribe(p => prods = p);
 
 const cart = writable<CartItemType[]>([]);
 
@@ -45,13 +58,47 @@ const increment = (id: number) => {
     });
 }
 
-const initCart = () => {
-    const storage = window.localStorage;
-    const _cart = storage.getItem('cart');
-    cart.set(_cart ? JSON.parse(_cart) : []);
+const initCart = async () => {
+    // wait for user to be loaded
+    if (userLoading) {
+        setTimeout(initCart, 100);
+        return;
+    }
+    let satItems = false;
+    if (user) {
+        const cartRef = doc(db, "cart", user.uid);
+        const snapshot = await getDoc(cartRef);
+        if (snapshot.exists()) {
+            const data = snapshot.data();
 
-    cart.subscribe((items) => {
+            if (data && data.items) {
+                const getMappedBack = data.items.map((item: { id: number, amount: number }) => ({
+                    id: item.id,
+                    amount: item.amount,
+                    item: prods.find((p) => p.id === item.id)
+                }));
+                cart.set(getMappedBack);
+                satItems = true;
+            }
+        }
+    }
+    const storage = window.localStorage;
+    if (!satItems) {
+        const _cart = storage.getItem('cart');
+        cart.set(_cart ? JSON.parse(_cart) : []);
+    }
+
+    cart.subscribe(async (items) => {
         storage.setItem('cart', JSON.stringify(items));
+        if (!user) return;
+        const mappedItems = items.map((item) => ({
+            id: item.id,
+            amount: item.amount,
+        }));
+        await setDoc(doc(db, "cart", user.uid), {
+            items: mappedItems,
+            lastUpdated: Timestamp.now()
+        });
     });
 }
 

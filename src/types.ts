@@ -12,3 +12,7 @@ export type CartItemType = {
     id: number;
     amount: number;
 }
+
+export type AccountSettings = {
+    saveToBasket: boolean;
+}

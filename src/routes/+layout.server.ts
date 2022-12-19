@@ -4,12 +4,18 @@ import type { LayoutServerLoad } from './$types';
 export const load = (async () => {
 
     // ...super heavy logic here
+    const seo = getSeo();
 
     return {
-        products
+        products,
+        seo
     };
 }) satisfies LayoutServerLoad;
 
+const getSeo = () => ({
+    title: 'Inmeta webshop',
+    description: 'The best webshop in the world',
+})
 
 const products: ShopItemType[] = [
     {
