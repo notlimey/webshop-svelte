@@ -1,9 +1,15 @@
-<script>
+<script lang=ts>
 	import Container from "./Container.svelte";
     import cart from "$stores/cart";
+    import { user as userState } from "$stores/authStore";
+	import type { User } from "firebase/auth";
 
     let len = 0;
+    let user: null | User = null;
 
+    userState.subscribe((value) => {
+        user = value;
+    });
     cart.subscribe((value) => {
         len = value.length;
     });
@@ -12,7 +18,7 @@
 <header class="h-20 px-5 bg-black text-white fixed top-0 left-0 w-full">
     <Container classes=" w-full h-full flex items-center justify-between">
         <h1 class="text-2xl">Webshop in svelte</h1>
-        <div>
+        <div class="flex items-center">
             <a href="/cart" class="mr-10 relative">Cart {#if len > 0}
                 <span class="absolute -top-3" id="cart-count">
                     {#if len > 9}
@@ -22,7 +28,14 @@
                     {/if}
                 </span>
             {/if}</a>
-            <a href="/login">Login</a>
+            {#if user}
+            <div class="flex items-center gap-x-2">
+                <p>{user.displayName}</p>
+                <img class="w-8 h-8 rounded-full" src={user.photoURL} alt={user.displayName} />
+            </div>
+            {:else}
+                <a href="/login">Login</a>
+            {/if}
         </div>
     </Container>
 </header>
