@@ -1,15 +1,9 @@
 <script lang=ts>
+	import { user, loading as loadingAuth } from "$stores/authStore";
+	import cart from "$stores/cart";
 	import Container from "./Container.svelte";
-    import cart from "$stores/cart";
-    import { user as userState } from "$stores/authStore";
-	import type { User } from "firebase/auth";
 
     let len = 0;
-    let user: null | User = null;
-
-    userState.subscribe((value) => {
-        user = value;
-    });
     cart.subscribe((value) => {
         len = value.length;
     });
@@ -28,13 +22,17 @@
                     {/if}
                 </span>
             {/if}</a>
-            {#if user}
-            <div class="flex items-center gap-x-2">
-                <p>{user.displayName}</p>
-                <img class="w-8 h-8 rounded-full" src={user.photoURL} alt={user.displayName} />
-            </div>
+            {#if $loadingAuth === false}
+                {#if $user}
+                <div class="flex items-center gap-x-2">
+                    <p>{$user.displayName}</p>
+                    <img class="w-8 h-8 rounded-full" src={$user.photoURL} alt={$user.displayName} />
+                </div>
+                {:else}
+                    <a href="/login">Login</a>
+                {/if}
             {:else}
-                <a href="/login">Login</a>
+                <p>Loading...</p>
             {/if}
         </div>
     </Container>

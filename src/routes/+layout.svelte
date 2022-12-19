@@ -8,7 +8,7 @@
 	import { onMount } from "svelte";
 	import "../app.css";
 	import type { LayoutData } from './$types';
-    import { user } from '$stores/authStore';
+    import { loading, user } from '$stores/authStore';
 
     export let data: LayoutData;
     products.set(data.products);
@@ -17,6 +17,7 @@
         initCart();
     });
     onAuthStateChanged(auth, (u) => {
+        loading.set(false);
         user.set(u);
     })
 </script>
